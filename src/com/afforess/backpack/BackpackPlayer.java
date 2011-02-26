@@ -22,17 +22,17 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 		boolean dirty = false;
 		if (prev != null) {
 			for (int i = 0; i < prev.length; i++) {
-				if (prev[i] != contents[i]) {
+				if (!BackpackManager.isEqual(prev[i], contents[i])) {
 					dirty = true;
 					break;
 				}
 			}
 		}
+		player.setDataValue("Inventory Page " + page, contents);
 		if (dirty) {
 			PlayerInventoryUpdater piu = new PlayerInventoryUpdater(this);
 			Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu);
 		}
-		player.setDataValue("Inventory Page " + page, contents);
 	}
 	
 	public int getCurrentInventoryPage() {
@@ -59,5 +59,4 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	public String getDataFilePath() {
 		return Backpack.dataDirectory + File.separator + player.getName() + ".data";
 	}
-
 }

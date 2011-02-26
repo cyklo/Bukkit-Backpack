@@ -79,5 +79,15 @@ public class BackpackManager {
 		ItemStack item = new ItemStack(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) Integer.parseInt(split[2]));
 		return item;
 	}
-
+	
+	public static boolean isEqual(ItemStack item1, ItemStack item2) {
+		if (item1 == null && item2 != null) return false;
+		if (item1 != null && item2 == null) return false;
+		if (item1 == null && item2 == null) return true;
+		if (item1.getTypeId() != item2.getTypeId()) return false;
+		if (item1.getAmount() != item2.getAmount()) return false;
+		if (item1.getDurability() != item2.getDurability()) return false;
+		
+		return true;
+	}
 }

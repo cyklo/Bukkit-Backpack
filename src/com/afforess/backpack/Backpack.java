@@ -19,6 +19,7 @@ public class Backpack extends JavaPlugin{
 	public static final String directory = "plugins" + File.separator + "Backpack";
 	public static final String dataDirectory = directory + File.separator + "data";
 	public static final BackpackPlayerListener bpl = new BackpackPlayerListener();
+	public static final BackpackEntityListener bpe = new BackpackEntityListener();
 	public static Plugin instance;
 	@Override
 	public void onDisable() {
@@ -39,6 +40,8 @@ public class Backpack extends JavaPlugin{
 		else {	
 			log.info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
 			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM_HELD, bpl, Priority.Lowest, this);
+			getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, bpl, Priority.Lowest, this);
+			getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, bpe, Priority.Lowest, this);
 			BackpackManager.initialize();
 		}
 	}

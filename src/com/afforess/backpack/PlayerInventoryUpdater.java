@@ -9,6 +9,7 @@ public class PlayerInventoryUpdater implements Runnable{
 	
 	ItemStack[][] contents = new ItemStack[9][36];
 	String path;
+	BackpackPlayer player;
 	public PlayerInventoryUpdater(BackpackPlayer player) {
 		for (int i = 0; i < 9; i++) {
 			contents[i] = player.getInventoryPage(i);
@@ -20,6 +21,7 @@ public class PlayerInventoryUpdater implements Runnable{
 			}
 		}
 		path = player.getDataFilePath();
+		this.player = player;
 	}
 
 	@Override
@@ -39,5 +41,7 @@ public class PlayerInventoryUpdater implements Runnable{
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 }
