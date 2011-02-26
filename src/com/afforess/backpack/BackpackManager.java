@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
+
+import com.afforess.minecartmaniacore.utils.ChatUtils;
 
 public class BackpackManager {
 	
@@ -51,6 +54,10 @@ public class BackpackManager {
 				input.close();
 			} catch (FileNotFoundException e) {
 			}
+		}
+		else {
+			ChatUtils.sendMultilineMessage(player.getPlayer(), "This server is using the Backpack mod! [NEWLINE] Use the mouse wheel while sneaking to switch through your [NEWLINE] new 9 inventory pages!", ChatColor.GREEN.toString());
+
 		}
 		for (int i = 0; i < 9; i++) {
 			if (player.getInventoryPage(i) == null)

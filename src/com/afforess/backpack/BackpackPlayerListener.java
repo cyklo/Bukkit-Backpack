@@ -36,10 +36,11 @@ public class BackpackPlayerListener extends PlayerListener{
     	if (event.isCancelled()) {
     		return;
     	}
+    	
     	if (!event.getFrom().equals(event.getTo())) {
     		//Check to see if we can pick up items and add them to other inventory pages if this one is full
-    		List<Entity> entities = event.getPlayer().getWorld().getEntities();
     		BackpackPlayer player = new BackpackPlayer(MinecartManiaWorld.getMinecartManiaPlayer(event.getPlayer()));
+    		List<Entity> entities = event.getPlayer().getWorld().getEntities();
     		PlayerInventorySorter sort = new PlayerInventorySorter(player, entities);
     		Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, sort);
     	}
