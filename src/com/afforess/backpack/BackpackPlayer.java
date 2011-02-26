@@ -59,4 +59,19 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	public String getDataFilePath() {
 		return Backpack.dataDirectory + File.separator + player.getName() + ".data";
 	}
+	
+	public int getMaxInventoryPages() {
+		int defaultVal = 9;
+		if (BackpackManager.config.get(this.getName()) == null) {
+			if (BackpackManager.config.get("default") == null) {
+				return defaultVal;
+			}
+			else {
+				return (Integer)BackpackManager.config.get("default");
+			}
+		} 
+		else {
+			return (Integer)BackpackManager.config.get(this.getName());
+		}
+	}
 }

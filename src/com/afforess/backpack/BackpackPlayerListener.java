@@ -22,13 +22,14 @@ public class BackpackPlayerListener extends PlayerListener{
 		boolean sneaking = false; //isSneaking is broken :(
 		net.minecraft.server.Entity e = ((CraftEntity)player.getPlayer()).getHandle();
 		sneaking = e.U();
-		if (sneaking && event.getNewSlot() != player.getCurrentInventoryPage()) {
-			ItemStack[] newInventory = player.getInventoryPage(event.getNewSlot());
+		int page = Math.min(event.getNewSlot(), player.getMaxInventoryPages() - 1);
+		if (sneaking && page != player.getCurrentInventoryPage()) {
+			ItemStack[] newInventory = player.getInventoryPage(page);
 			ItemStack[] oldInventory = player.getInventory().getContents();
 			player.setInventoryPage(player.getCurrentInventoryPage(), oldInventory);
 			player.getInventory().setContents(newInventory);
 			player.getPlayer().updateInventory();
-			player.setCurrentInventoryPage(event.getNewSlot());
+			player.setCurrentInventoryPage(page);
 		}
 	}
 	
