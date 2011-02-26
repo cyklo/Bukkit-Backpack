@@ -3,6 +3,7 @@ package com.afforess.backpack;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,7 @@ public class PlayerInventorySorter implements Runnable {
 			if (e instanceof Item) {
 				if (e.getLocation().toVector().distanceSquared(player.getPlayer().getLocation().toVector()) <= 2.5D){
 					Item drop = (Item)e;
+					ItemStack[] contents = player.getContents();
 					if (!player.addItem(drop.getItemStack())) {
 						ItemStack item = drop.getItemStack();
 						for (int i = 0; i < 9; i++) {
@@ -56,14 +58,22 @@ public class PlayerInventorySorter implements Runnable {
 							}
 						}
 						if (item == null) {
-							drop.remove();
+							CraftEntity ce = ((CraftEntity)drop);
+							ce.getHandle().C();
 						}
 					}
 					else {
-						drop.remove();
+						player.getInventory().setContents(contents);
 					}
 				}
 			}
 		}
+		Runnable r = new Runnable() {
+			public void run() {
+				player.setDataValue("Active Sorting", null);
+			}
+		};
+		Backpack.server.getScheduler().scheduleSyncDelayedTask(Backpack.instance, r, 8);
+		
 	}
 }

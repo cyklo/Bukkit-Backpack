@@ -18,19 +18,20 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	}
 	
 	public void setInventoryPage(int page, ItemStack[] contents) {
-		ItemStack[] prev = getInventoryPage(page);
-		boolean dirty = false;
-		if (prev != null) {
-			for (int i = 0; i < prev.length; i++) {
-				if (!BackpackManager.isEqual(prev[i], contents[i])) {
-					dirty = true;
-					break;
-				}
-			}
-		}
+		//ItemStack[] prev = getInventoryPage(page);
+		//boolean dirty = false;
+		//if (prev != null) {
+		//	for (int i = 0; i < prev.length; i++) {
+		//		if (!BackpackManager.isEqual(prev[i], contents[i])) {
+		//			dirty = true;
+		//			break;
+		//		}
+		//	}
+		//}
 		player.setDataValue("Inventory Page " + page, contents);
-		if (dirty) {
+		if (player.getDataValue("Active Updating") == null) {
 			PlayerInventoryUpdater piu = new PlayerInventoryUpdater(this);
+			player.setDataValue("Active Updating", Boolean.TRUE);
 			Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu);
 		}
 	}

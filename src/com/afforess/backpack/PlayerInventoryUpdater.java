@@ -10,6 +10,7 @@ public class PlayerInventoryUpdater implements Runnable{
 	ItemStack[][] contents = new ItemStack[9][36];
 	String path;
 	BackpackPlayer player;
+	int currentPage;
 	public PlayerInventoryUpdater(BackpackPlayer player) {
 		for (int i = 0; i < 9; i++) {
 			contents[i] = player.getInventoryPage(i);
@@ -22,12 +23,15 @@ public class PlayerInventoryUpdater implements Runnable{
 		}
 		path = player.getDataFilePath();
 		this.player = player;
+		currentPage = player.getCurrentInventoryPage();
 	}
 
 	@Override
 	public void run() {
 		try {
 			PrintWriter pw = new PrintWriter(new File(path));
+			pw.append("Current Page:"+currentPage);
+			pw.append("\n");
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < contents[i].length; j++) {
 					pw.append(BackpackManager.serializeItemStack(contents[i][j]));
@@ -37,11 +41,17 @@ public class PlayerInventoryUpdater implements Runnable{
 				pw.append("\n");
 			}
 			pw.close();
+			
+			if (player.isOnline()) {
+				PlayerInventoryUpdater piu = new PlayerInventoryUpdater(player);
+				Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu);
+			}
+			else {
+				player.setDataValue("Active Updating", null);
+			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			player.setDataValue("Active Updating", null);
 		}
-		
-		
 	}
 }

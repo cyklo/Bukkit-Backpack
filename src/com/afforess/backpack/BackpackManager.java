@@ -153,7 +153,6 @@ public class BackpackManager {
 	 }
 
 	public static void initializeBackPack(BackpackPlayer player) {
-		player.setBackpackEnabled(true);
 		//Check for previous data
 		File prevData = new File(player.getDataFilePath());
 		if (prevData.exists()){
@@ -163,6 +162,9 @@ public class BackpackManager {
 				int page = 0;
 				ItemStack[] contents = new ItemStack[player.getContents().length];
 				int item = 0;
+				String first = input.nextLine();
+				int currentPage = Integer.parseInt(first.split(":")[1]);
+				player.setCurrentInventoryPage(currentPage);
 				while(input.hasNext()) {
 					String line = input.nextLine();
 					//Move to next page
@@ -175,11 +177,13 @@ public class BackpackManager {
 					//Parse this pages contents
 					else {
 						ItemStack i = deserializeItemStackString(line);
+						//System.out.println("page:" + page + " item:" + i);
 						contents[item] = i;
-						item ++;
+						item++;
 					}
 				}
 				input.close();
+				player.setInventoryPage(player.getCurrentInventoryPage(), player.getInventoryPage(player.getCurrentInventoryPage()));
 			} catch (FileNotFoundException e) {
 			}
 		}
@@ -192,6 +196,8 @@ public class BackpackManager {
 			if (player.getInventoryPage(i) == null)
 				player.setInventoryPage(i, new ItemStack[player.getContents().length]);
 		}
+		player.setBackpackEnabled(true);
+		
 	}
 	
 	public static String serializeItemStack(ItemStack i) {
