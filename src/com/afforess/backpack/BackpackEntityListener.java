@@ -15,7 +15,7 @@ public class BackpackEntityListener extends EntityListener{
     	if (event.getEntity() instanceof Player) {
     		BackpackPlayer player = new BackpackPlayer(MinecartManiaWorld.getMinecartManiaPlayer((Player)event.getEntity()));
     		List<ItemStack> loot = event.getDrops();
-    		for (int i = 0; i < 9; i++) {
+    		for (int i = 0; i < player.getMaxInventoryPages(); i++) {
     			if (i != player.getCurrentInventoryPage()) {
     				ItemStack[] page = player.getInventoryPage(i);
     				for (int j = 0; j < 36; j++) {

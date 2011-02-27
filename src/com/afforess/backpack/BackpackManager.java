@@ -162,9 +162,14 @@ public class BackpackManager {
 				int page = 0;
 				ItemStack[] contents = new ItemStack[player.getContents().length];
 				int item = 0;
-				String first = input.nextLine();
-				int currentPage = Integer.parseInt(first.split(":")[1]);
-				player.setCurrentInventoryPage(currentPage);
+				try {
+					String first = input.nextLine();
+					int currentPage = Integer.parseInt(first.split(":")[1]);
+					player.setCurrentInventoryPage(currentPage);
+				}
+				catch (Exception e) {
+					player.setCurrentInventoryPage(0);
+				}
 				while(input.hasNext()) {
 					String line = input.nextLine();
 					//Move to next page

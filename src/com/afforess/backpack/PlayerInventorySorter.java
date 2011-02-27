@@ -23,47 +23,48 @@ public class PlayerInventorySorter implements Runnable {
 			if (e instanceof Item) {
 				if (e.getLocation().toVector().distanceSquared(player.getPlayer().getLocation().toVector()) <= 2.5D){
 					Item drop = (Item)e;
-					ItemStack[] contents = player.getContents();
-					if (!player.addItem(drop.getItemStack())) {
-						ItemStack item = drop.getItemStack();
-						for (int i = 0; i < 9; i++) {
-							ItemStack[] page = player.getInventoryPage(i);
-							//First pass attempt to merge with existing items
-							for (int j = 0; j < 36; j++) {
-								if (page[j] != null && page[j].getTypeId() == drop.getItemStack().getTypeId() && page[j].getDurability() == drop.getItemStack().getDurability()) {
-									if (page[j].getAmount() + item.getAmount() <= 64) {
-										page[j].setAmount(page[j].getAmount() + item.getAmount());
-										item = null;
-										break;
-									}
-									else {
-										int diff = page[j].getAmount() + item.getAmount() - 64;
-										page[j].setAmount(64);
-										item.setAmount(diff);
-									}
-								}
-							}
-							//second pass look for empty slot
-							if (item != null) {
+					ItemStack item = drop.getItemStack();
+					if (!player.canAddItem(item)) {
+						for (int i = 0; i < player.getMaxInventoryPages(); i++) {
+							if (i != player.getCurrentInventoryPage()) {
+								ItemStack[] page = player.getInventoryPage(i);
+								
+								//First pass attempt to merge with existing items
 								for (int j = 0; j < 36; j++) {
-									if (page[j] == null || page[j].getTypeId() == Material.AIR.getId()) {
-										page[j] = item;
-										item = null;
-										break;
+									if (page[j] != null && page[j].getTypeId() == drop.getItemStack().getTypeId() && page[j].getDurability() == drop.getItemStack().getDurability()) {
+										if (page[j].getAmount() + item.getAmount() <= 64) {
+											page[j].setAmount(page[j].getAmount() + item.getAmount());
+											item = null;
+											break;
+										}
+										else {
+											int diff = page[j].getAmount() + item.getAmount() - 64;
+											page[j].setAmount(64);
+											item.setAmount(diff);
+										}
 									}
 								}
-							}
-							if (item == null) {
-								break;
+								
+								//second pass look for empty slot
+								if (item != null) {
+									for (int j = 0; j < 36; j++) {
+										if (page[j] == null || page[j].getTypeId() == Material.AIR.getId()) {
+											page[j] = item;
+											item = null;
+											break;
+										}
+									}
+								}
+								
+								if (item == null) {
+									break;
+								}
 							}
 						}
 						if (item == null) {
 							CraftEntity ce = ((CraftEntity)drop);
 							ce.getHandle().C();
 						}
-					}
-					else {
-						player.getInventory().setContents(contents);
 					}
 				}
 			}
@@ -73,7 +74,7 @@ public class PlayerInventorySorter implements Runnable {
 				player.setDataValue("Active Sorting", null);
 			}
 		};
-		Backpack.server.getScheduler().scheduleSyncDelayedTask(Backpack.instance, r, 8);
+		Backpack.server.getScheduler().scheduleSyncDelayedTask(Backpack.instance, r, 20);
 		
 	}
 }

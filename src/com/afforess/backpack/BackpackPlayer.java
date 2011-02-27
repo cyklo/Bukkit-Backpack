@@ -18,16 +18,6 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	}
 	
 	public void setInventoryPage(int page, ItemStack[] contents) {
-		//ItemStack[] prev = getInventoryPage(page);
-		//boolean dirty = false;
-		//if (prev != null) {
-		//	for (int i = 0; i < prev.length; i++) {
-		//		if (!BackpackManager.isEqual(prev[i], contents[i])) {
-		//			dirty = true;
-		//			break;
-		//		}
-		//	}
-		//}
 		player.setDataValue("Inventory Page " + page, contents);
 		if (player.getDataValue("Active Updating") == null) {
 			PlayerInventoryUpdater piu = new PlayerInventoryUpdater(this);
@@ -74,5 +64,19 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 		else {
 			return (Integer)BackpackManager.config.get(this.getName());
 		}
+	}
+	
+	public boolean canAddItem(ItemStack item) {
+		ItemStack[] contents = getContents();
+		int amt = item.getAmount();
+		for (int i = 0; i < 36; i++){
+			if (contents[i] == null || contents[i].getTypeId() == 0) {
+				return true;
+			}
+			if (contents[i].getTypeId() == item.getTypeId() && contents[i].getDurability() == item.getDurability()) {
+				amt = contents[i].getAmount() + amt - 64;
+			}
+		}
+		return amt <= 0;
 	}
 }
