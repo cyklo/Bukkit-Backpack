@@ -195,7 +195,6 @@ public class BackpackManager {
 		else {
 			if (player.getMaxInventoryPages() > 1)
 				ChatUtils.sendMultilineMessage(player.getPlayer(), "This server is using the Backpack mod! [NEWLINE] Use the mouse wheel while sneaking to switch through your [NEWLINE] new " + player.getMaxInventoryPages() + " inventory pages!", ChatColor.GREEN.toString());
-
 		}
 		for (int i = 0; i < 9; i++) {
 			if (player.getInventoryPage(i) == null)
