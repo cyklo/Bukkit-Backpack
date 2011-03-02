@@ -8,6 +8,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.afforess.minecartmaniacore.MinecartManiaWorld;
+
 public class PlayerInventorySorter implements Runnable {
 	
 	List<Entity> entityList;
@@ -22,7 +24,10 @@ public class PlayerInventorySorter implements Runnable {
 	@Override
 	public void run() {
 		for (Entity e : entityList) {
-			if (e instanceof Item && e.getLocation().toVector().distanceSquared(location) <= 2.0D) {
+			if (MinecartManiaWorld.isDead(e)) {
+				continue;
+			}
+			if (e instanceof Item && e.getLocation().toVector().distanceSquared(location) <= 2.5D) {
 				ItemStack item = ((Item)e).getItemStack();
 				if (!player.canAddItem(item)) {
 					for (int i = 0; i < player.getMaxInventoryPages(); i++) {
@@ -67,12 +72,7 @@ public class PlayerInventorySorter implements Runnable {
 				}
 			}
 		}
-		Runnable r = new Runnable() {
-			public void run() {
-				player.setDataValue("Active Sorting", null);
-			}
-		};
-		Backpack.server.getScheduler().scheduleSyncDelayedTask(Backpack.instance, r, 40);
-		
+		//Reset the flag
+		player.setDataValue("Active Sorting", null);
 	}
 }

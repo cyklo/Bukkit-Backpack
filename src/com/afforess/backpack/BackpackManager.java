@@ -182,7 +182,6 @@ public class BackpackManager {
 					//Parse this pages contents
 					else {
 						ItemStack i = deserializeItemStackString(line);
-						//System.out.println("page:" + page + " item:" + i);
 						contents[item] = i;
 						item++;
 					}

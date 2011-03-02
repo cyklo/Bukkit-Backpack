@@ -2,6 +2,7 @@ package com.afforess.backpack;
 
 import java.io.File;
 
+import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.afforess.minecartmaniacore.MinecartManiaPlayer;
@@ -47,6 +48,36 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 		player.setDataValue("Backpack Enabled", b);
 	}
 	
+	public boolean isInInventoryWindow() {
+		return player.getDataValue("Dialog Window") != null;
+	}
+	
+	public void setInInventorWindow(CraftInventory inventory, int page) {
+		if (inventory == null) {
+			player.setDataValue("Dialog Window", null);
+		}
+		else {
+			Object[] o = {inventory, page};
+			player.setDataValue("Dialog Window", o);
+		}
+	}
+	
+	public int getInventoryWindowPage() {
+		if (isInInventoryWindow()) {
+			Object[] o = (Object[]) player.getDataValue("Dialog Window");
+			return ((Integer)o[1]).intValue();
+		}
+		return -1;
+	}
+	
+	public CraftInventory getInventoryWindow() {
+		if (isInInventoryWindow()) {
+			Object[] o = (Object[]) player.getDataValue("Dialog Window");
+			return ((CraftInventory)o[0]);
+		}
+		return null;
+	}
+	
 	public String getDataFilePath() {
 		return Backpack.dataDirectory + File.separator + player.getName() + ".data";
 	}
@@ -78,5 +109,27 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 			}
 		}
 		return amt <= 0;
+	}
+
+	//Called after a dialog window with our own 2 inventory pages is closed, used to update the contents of the inventory
+	public void updateDialogWindow() {
+		//Check and see if we need to update from the dialog window we just closed
+		//Moving isn't a sure fire to detect a closed window, but in this case, the user had to use a command, so it works
+		if (isInInventoryWindow()) {
+			int page = getInventoryWindowPage();
+			CraftInventory ci = getInventoryWindow();
+			
+			//CraftInventory gives us the armor slots too, which we need to dump
+			ItemStack[] contents = ci.getContents();
+			ItemStack[] realContents = new ItemStack[36];
+			for (int i = 0; i < 36; i++) {
+				realContents[i] = contents[i];
+			}
+			
+			setInventoryPage(page, realContents);
+			
+			//clear the references
+			setInInventorWindow(null, -1);
+		}
 	}
 }

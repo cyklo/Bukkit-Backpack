@@ -18,6 +18,9 @@ public class BackpackPlayerListener extends PlayerListener{
 		if (!player.isBackpackEnabled()) {
 			BackpackManager.initializeBackPack(player);
 		}
+		
+		player.updateDialogWindow();
+		
 		boolean sneaking = false; //isSneaking is broken :(
 		net.minecraft.server.Entity e = ((CraftEntity)player.getPlayer()).getHandle();
 		sneaking = e.U();
@@ -41,6 +44,9 @@ public class BackpackPlayerListener extends PlayerListener{
     		return;
     	}
     	if (!event.getFrom().equals(event.getTo())) {
+    		
+    		player.updateDialogWindow();
+    		
     		//Check to see if we can pick up items and add them to other inventory pages if this one is full
     		
     		if (player.getDataValue("Active Sorting") == null) {
@@ -51,5 +57,4 @@ public class BackpackPlayerListener extends PlayerListener{
     		}
     	}
     }
-
 }

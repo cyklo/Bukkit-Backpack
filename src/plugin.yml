@@ -1,4 +1,9 @@
 name: Backpack
 main: com.afforess.backpack.Backpack
-version: 0.20
+version: 0.21
 author: Afforess
+
+commands:
+  open:
+    description: Allows the player to see their current inventory page, the inventory page of their choosing in a window
+    usage: /<command> <inventory page #>
