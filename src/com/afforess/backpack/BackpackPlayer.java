@@ -2,6 +2,8 @@ package com.afforess.backpack;
 
 import java.io.File;
 
+import net.minecraft.server.InventoryPlayer;
+
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -129,6 +131,10 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 			setInventoryPage(page, realContents);
 			
 			//clear the references
+			InventoryPlayer ip = (InventoryPlayer) ci.getInventory();
+			ip.a = null;
+			ip.b = null;
+			ip.d = true;
 			setInInventorWindow(null, -1);
 		}
 	}

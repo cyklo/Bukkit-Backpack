@@ -44,7 +44,8 @@ public class PlayerInventoryUpdater implements Runnable{
 			
 			if (player.isOnline()) {
 				PlayerInventoryUpdater piu = new PlayerInventoryUpdater(player);
-				Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu);
+				//20 ticks a second, 60 seconds in a minute (20* 60)
+				Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu, 1200);
 			}
 			else {
 				player.setDataValue("Active Updating", null);
