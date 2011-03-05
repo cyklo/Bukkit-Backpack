@@ -4,33 +4,44 @@ import java.io.File;
 
 import net.minecraft.server.InventoryPlayer;
 
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.afforess.minecartmaniacore.MinecartManiaPlayer;
 
 public class BackpackPlayer extends MinecartManiaPlayer{
-	public final MinecartManiaPlayer player;
 	public BackpackPlayer(MinecartManiaPlayer player) {
 		super(player.getName());
-		this.player = player;
 	}
 	
 	public ItemStack[] getInventoryPage(int page) {
-		return (ItemStack[]) player.getDataValue("Inventory Page " + page);
+		if (page == getCurrentInventoryPage()) {
+			return getInventory().getContents();
+		}
+		ItemStack[] value = (ItemStack[]) getDataValue("Inventory Page " + page);
+		if (value == null) {
+			value = new ItemStack[36];
+			setInventoryPage(page, value);
+		}
+		return value;
 	}
 	
 	public void setInventoryPage(int page, ItemStack[] contents) {
-		player.setDataValue("Inventory Page " + page, contents);
-		if (player.getDataValue("Active Updating") == null) {
+		setDataValue("Inventory Page " + page, contents);
+		if (page == getCurrentInventoryPage()) {
+			System.out.println("Updating Inventory Window");
+			updateInventoryWindow();
+		}
+		if (getDataValue("Active Updating") == null) {
 			PlayerInventoryUpdater piu = new PlayerInventoryUpdater(this);
-			player.setDataValue("Active Updating", Boolean.TRUE);
+			setDataValue("Active Updating", Boolean.TRUE);
 			Backpack.server.getScheduler().scheduleAsyncDelayedTask(Backpack.instance, piu);
 		}
 	}
 	
 	public int getCurrentInventoryPage() {
-		Object value =  player.getDataValue("Current Page");
+		Object value = getDataValue("Current Page");
 		if (value == null) {
 			setCurrentInventoryPage(0); //upon login we are always at slot 0
 			return 0;
@@ -39,34 +50,38 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	}
 	
 	public void setCurrentInventoryPage(int page) {
-	player.setDataValue("Current Page", page);
+		setDataValue("Current Page", page);
+	}
+	
+	public void updateInventoryWindow() {
+		getInventory().setContents(getInventoryPage(getCurrentInventoryPage()));
 	}
 	
 	public boolean isBackpackEnabled() {
-		return player.getDataValue("Backpack Enabled") != null;
+		return getDataValue("Backpack Enabled") != null;
 	}
 	
 	public void setBackpackEnabled(boolean b) {
-		player.setDataValue("Backpack Enabled", b);
+		setDataValue("Backpack Enabled", b);
 	}
 	
 	public boolean isInInventoryWindow() {
-		return player.getDataValue("Dialog Window") != null;
+		return getDataValue("Dialog Window") != null;
 	}
 	
 	public void setInInventorWindow(CraftInventory inventory, int page) {
 		if (inventory == null) {
-			player.setDataValue("Dialog Window", null);
+			setDataValue("Dialog Window", null);
 		}
 		else {
 			Object[] o = {inventory, page};
-			player.setDataValue("Dialog Window", o);
+			setDataValue("Dialog Window", o);
 		}
 	}
 	
 	public int getInventoryWindowPage() {
 		if (isInInventoryWindow()) {
-			Object[] o = (Object[]) player.getDataValue("Dialog Window");
+			Object[] o = (Object[]) getDataValue("Dialog Window");
 			return ((Integer)o[1]).intValue();
 		}
 		return -1;
@@ -74,14 +89,14 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	
 	public CraftInventory getInventoryWindow() {
 		if (isInInventoryWindow()) {
-			Object[] o = (Object[]) player.getDataValue("Dialog Window");
+			Object[] o = (Object[]) getDataValue("Dialog Window");
 			return ((CraftInventory)o[0]);
 		}
 		return null;
 	}
 	
 	public String getDataFilePath() {
-		return Backpack.dataDirectory + File.separator + player.getName() + ".data";
+		return Backpack.dataDirectory + File.separator + getName() + ".data";
 	}
 	
 	public int getMaxInventoryPages() {
@@ -136,6 +151,55 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 			ip.b = null;
 			ip.d = true;
 			setInInventorWindow(null, -1);
+		}
+	}
+	
+	public ItemStack[][] getInventoryContents() {
+		ItemStack[][] contents = new ItemStack[getMaxInventoryPages()][36];
+		for (int i = 0; i < getMaxInventoryPages(); i++) {
+			contents[i] = getInventoryPage(i);
+		}
+		return contents;
+	}
+	
+	public boolean contains(int type) {
+		return first(type) != -1;
+	}
+	
+	public boolean contains(Material m) {
+		return contains(m.getId());
+	}
+	
+	public int first(int type) {
+		for (int i = 0; i < getMaxInventoryPages(); i++) {
+			for (int j = 0; j < 36; j++) {
+				ItemStack item = getInventoryPage(i)[j];
+				if (item != null && item.getTypeId() == type) {
+					return j + i * 36;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public int first(Material m) {
+		return first(m.getId());
+	}
+	
+	public ItemStack getItem(int slot) {
+		int page = slot / 36;
+		slot -= page * 36;
+		return getInventoryPage(page)[slot];
+	}
+	
+	public void setItem(int slot, ItemStack item) {
+		int page = slot / 36;
+		slot -= page * 36;
+		ItemStack[] contents = getInventoryPage(page);
+		contents[slot] = item;
+		setInventoryPage(page, contents);
+		if (page == getCurrentInventoryPage()) {
+			getInventory().setItem(slot, item);
 		}
 	}
 }

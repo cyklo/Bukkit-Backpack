@@ -1,6 +1,7 @@
 package com.afforess.backpack;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import net.minecraft.server.EntityPlayer;
@@ -18,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.afforess.minecartmaniacore.MinecartManiaPlayer;
 import com.afforess.minecartmaniacore.MinecartManiaWorld;
 import com.afforess.minecartmaniacore.utils.StringUtils;
 
@@ -34,6 +36,25 @@ public class Backpack extends JavaPlugin{
 	public static Plugin instance;
 	@Override
 	public void onDisable() {
+		log.info( "[BACKPACK] Saving Player Data!" );
+		try {
+			ArrayList<MinecartManiaPlayer> playerList = MinecartManiaWorld.getMinecartManiaPlayerList();
+			for (MinecartManiaPlayer p : playerList) {
+				try {
+					BackpackPlayer player = BackpackManager.getBackpackPlayer(p.getPlayer());
+					(new PlayerInventoryUpdater(player)).run();
+					log.info("[BACKPACK] Saved " + player.getName() + "'s inventory data!");
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					log.severe( "[BACKPACK] Failed to save " + p.getName() + "'s inventory data!");
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			log.severe( "[BACKPACK] Failed to save Player Data!" );
+		}
 	}
 
 	@Override

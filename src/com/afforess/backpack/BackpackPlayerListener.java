@@ -8,13 +8,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Entity;
 
-import com.afforess.minecartmaniacore.MinecartManiaWorld;
-
 public class BackpackPlayerListener extends PlayerListener{
 
 	@SuppressWarnings("deprecation")
 	public void onItemHeldChange(PlayerItemHeldEvent event) {
-		BackpackPlayer player = new BackpackPlayer(MinecartManiaWorld.getMinecartManiaPlayer(event.getPlayer()));
+		BackpackPlayer player = BackpackManager.getBackpackPlayer(event.getPlayer());
 		if (!player.isBackpackEnabled()) {
 			BackpackManager.initializeBackPack(player);
 		}
@@ -39,7 +37,7 @@ public class BackpackPlayerListener extends PlayerListener{
     	if (event.isCancelled()) {
     		return;
     	}
-    	BackpackPlayer player = new BackpackPlayer(MinecartManiaWorld.getMinecartManiaPlayer(event.getPlayer()));
+    	BackpackPlayer player = BackpackManager.getBackpackPlayer(event.getPlayer());
     	if (!player.isBackpackEnabled()) {
     		return;
     	}

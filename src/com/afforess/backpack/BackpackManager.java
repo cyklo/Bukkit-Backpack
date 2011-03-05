@@ -24,8 +24,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.afforess.minecartmaniacore.MinecartManiaPlayer;
+import com.afforess.minecartmaniacore.MinecartManiaWorld;
 import com.afforess.minecartmaniacore.utils.ChatUtils;
 
 public class BackpackManager {
@@ -234,5 +237,15 @@ public class BackpackManager {
 		if (item1.getDurability() != item2.getDurability()) return false;
 		
 		return true;
+	}
+	
+	public static BackpackPlayer getBackpackPlayer(Player player) {
+		MinecartManiaPlayer plyr = MinecartManiaWorld.getMinecartManiaPlayer(player);
+		if (plyr instanceof BackpackPlayer) {
+			return (BackpackPlayer)plyr;
+		}
+		BackpackPlayer replace = new BackpackPlayer(plyr);
+		MinecartManiaWorld.setMinecartManiaPlayer(replace, player.getName());
+		return replace;
 	}
 }
