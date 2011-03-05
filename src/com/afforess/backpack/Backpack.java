@@ -83,7 +83,7 @@ public class Backpack extends JavaPlugin{
 			return false;
 		}
 		
-		BackpackPlayer player = new BackpackPlayer(MinecartManiaWorld.getMinecartManiaPlayer((Player)sender));
+		BackpackPlayer player = BackpackManager.getBackpackPlayer((Player)sender);
 		if (commandLabel.equalsIgnoreCase("open")) {
 			if (args.length == 1) {
 				try {

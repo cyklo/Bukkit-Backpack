@@ -30,7 +30,6 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	public void setInventoryPage(int page, ItemStack[] contents) {
 		setDataValue("Inventory Page " + page, contents);
 		if (page == getCurrentInventoryPage()) {
-			System.out.println("Updating Inventory Window");
 			updateInventoryWindow();
 		}
 		if (getDataValue("Active Updating") == null) {
