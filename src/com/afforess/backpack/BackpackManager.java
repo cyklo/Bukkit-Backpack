@@ -223,9 +223,15 @@ public class BackpackManager {
 		if (s.equals("null")) {
 			return null;
 		}
-		String[] split = s.split(":");
-		ItemStack item = new ItemStack(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) Integer.parseInt(split[2]));
-		return item;
+		try {
+			String[] split = s.split(":");
+			ItemStack item = new ItemStack(Integer.parseInt(split[0]), Integer.parseInt(split[1]), (short) Integer.parseInt(split[2]));
+			return item;
+		}
+		catch (Exception e) {
+			Backpack.log.severe("[BACKPACK] Failed to read contents of backpack!");
+			return null;
+		}
 	}
 	
 	public static boolean isEqual(ItemStack item1, ItemStack item2) {
@@ -239,13 +245,17 @@ public class BackpackManager {
 		return true;
 	}
 	
-	public static BackpackPlayer getBackpackPlayer(Player player) {
+	public static BackpackPlayer getBackpackPlayer(String player) {
 		MinecartManiaPlayer plyr = MinecartManiaWorld.getMinecartManiaPlayer(player);
 		if (plyr instanceof BackpackPlayer) {
 			return (BackpackPlayer)plyr;
 		}
 		BackpackPlayer replace = new BackpackPlayer(plyr);
-		MinecartManiaWorld.setMinecartManiaPlayer(replace, player.getName());
+		MinecartManiaWorld.setMinecartManiaPlayer(replace, player);
 		return replace;
+	}
+
+	public static BackpackPlayer getBackpackPlayer(Player player) {
+		return getBackpackPlayer(player.getName());
 	}
 }

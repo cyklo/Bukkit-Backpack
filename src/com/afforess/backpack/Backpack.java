@@ -41,7 +41,7 @@ public class Backpack extends JavaPlugin{
 			ArrayList<MinecartManiaPlayer> playerList = MinecartManiaWorld.getMinecartManiaPlayerList();
 			for (MinecartManiaPlayer p : playerList) {
 				try {
-					BackpackPlayer player = BackpackManager.getBackpackPlayer(p.getPlayer());
+					BackpackPlayer player = BackpackManager.getBackpackPlayer(p.getName());
 					(new PlayerInventoryUpdater(player)).run();
 					log.info("[BACKPACK] Saved " + player.getName() + "'s inventory data!");
 				}
