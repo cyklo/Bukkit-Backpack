@@ -194,7 +194,7 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 		for (int i = 0; i < getMaxInventoryPages(); i++) {
 			for (int j = 0; j < 36; j++) {
 				ItemStack item = getInventoryPage(i)[j];
-				if (item != null && item.getTypeId() == m.getId() && item.getDurability() == m.getData()) {
+				if (item != null && item.getTypeId() == m.getId() && (item.getDurability() == -1 || !m.hasData() || item.getDurability() == m.getData())) {
 					return j + i * 36;
 				}
 			}
