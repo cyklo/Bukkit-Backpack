@@ -1,6 +1,6 @@
 name: Backpack
 main: com.afforess.backpack.Backpack
-version: 1.0
+version: 1.0a
 author: Afforess
 
 commands:

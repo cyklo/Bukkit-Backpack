@@ -18,12 +18,14 @@ public class BackpackEntityListener extends EntityListener{
     		for (int i = 0; i < player.getMaxInventoryPages(); i++) {
     			if (i != player.getCurrentInventoryPage()) {
     				ItemStack[] page = player.getInventoryPage(i);
-    				for (int j = 0; j < 36; j++) {
-    					if (page[j] != null && page[j].getType() != Material.AIR) {
-    						loot.add(page[j]);
-    					}
+    				if (page != null) {
+	    				for (int j = 0; j < 36; j++) {
+	    					if (page[j] != null && page[j].getType() != Material.AIR) {
+	    						loot.add(page[j]);
+	    					}
+	    				}
+	    				player.setInventoryPage(i, new ItemStack[36]);
     				}
-    				player.setInventoryPage(i, new ItemStack[36]);
     			}
     		}
     	}

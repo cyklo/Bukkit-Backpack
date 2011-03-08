@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.afforess.minecartmaniacore.Item;
 import com.afforess.minecartmaniacore.MinecartManiaPlayer;
 
 public class BackpackPlayer extends MinecartManiaPlayer{
@@ -169,6 +170,10 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 		return contains(m.getId());
 	}
 	
+	public boolean contains(Item m) {
+		return first(m) != -1;
+	}
+	
 	public int first(int type) {
 		for (int i = 0; i < getMaxInventoryPages(); i++) {
 			for (int j = 0; j < 36; j++) {
@@ -183,6 +188,18 @@ public class BackpackPlayer extends MinecartManiaPlayer{
 	
 	public int first(Material m) {
 		return first(m.getId());
+	}
+	
+	public int first(Item m) {
+		for (int i = 0; i < getMaxInventoryPages(); i++) {
+			for (int j = 0; j < 36; j++) {
+				ItemStack item = getInventoryPage(i)[j];
+				if (item != null && item.getTypeId() == m.getId() && item.getDurability() == m.getData()) {
+					return j + i * 36;
+				}
+			}
+		}
+		return -1;
 	}
 	
 	public ItemStack getItem(int slot) {
